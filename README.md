@@ -1,4 +1,9 @@
 # Hide_Whatsapp_Sidebar (Chrome extension)
 
+<img src="./images/readme.gif"/>
 
-<img src="https://giphy.com/embed/itNlo0tdzBR4H2wWQK"/>
+---
+## Created by
+
+* 🇲🇦 **Mahmoud Zakaria** 
+* 🌐 [www.mahmoud.ma](https://www.mahmoud.ma/)
