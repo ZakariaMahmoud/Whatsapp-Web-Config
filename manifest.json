@@ -3,9 +3,6 @@
   "description": "Hide Whatsapp Sidebar",
   "version": "1.0",
   "manifest_version": 3,
-  "background": {
-    "service_worker": "background.js"
-  },
   "permissions": [
     "storage",
     "activeTab",
@@ -20,6 +17,12 @@
       "128": "/images/Hide_watsapp128.png"
     }
   },
+  "content_scripts": [
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["assets/js/content-script.js"]
+    }
+  ],
   "icons": {
     "16": "/images/Hide_watsapp16.png",
     "32": "/images/Hide_watsapp32.png",
