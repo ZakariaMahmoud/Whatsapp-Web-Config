@@ -18,5 +18,7 @@ function check() {
 		else
 			show(element);
 	}
+	
 }
 check()
+

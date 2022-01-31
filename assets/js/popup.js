@@ -32,3 +32,12 @@ function hide()
 	document.getElementById("msg").textContent = "Hide"
 	document.getElementById("img").src = "./images/eye.png";
 }
+
+
+chrome.tabs.query({active:true,currentWindow:true},function(tab){
+	var url = tab[0].url;
+	if(url.search("web.whatsapp.com") == -1)
+	{
+		window.open('https://web.whatsapp.com/', '_blank');
+	}
+});
