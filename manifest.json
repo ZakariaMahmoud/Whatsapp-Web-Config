@@ -5,6 +5,7 @@
   "manifest_version": 3,
   "permissions": [
     "storage",
+    "cookies",
     "activeTab",
     "scripting"
   ],
@@ -17,10 +18,17 @@
       "128": "/images/Hide_watsapp128.png"
     }
   },
+  "host_permissions": [
+    "https://web.whatsapp.com/"
+  ],
   "content_scripts": [
     {
-      "matches": ["https://web.whatsapp.com/*"],
-      "js": ["assets/js/content-script.js"]
+      "matches": [
+        "https://web.whatsapp.com/*"
+      ],
+      "js": [
+        "assets/js/content-script.js"
+      ]
     }
   ],
   "icons": {
