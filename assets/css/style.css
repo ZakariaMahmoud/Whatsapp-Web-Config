@@ -1,0 +1,17 @@
+body
+{
+	width: 500px;
+	margin-top: 10px;
+	background-color: #333333 !important;
+	padding: 20px;
+}
+
+.color-orange
+{
+	color: #FA9400;
+}
+
+.d-inline
+{
+	display: inline;
+}

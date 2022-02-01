@@ -12,10 +12,10 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "/images/Hide_watsapp16.png",
-      "32": "/images/Hide_watsapp32.png",
-      "48": "/images/Hide_watsapp48.png",
-      "128": "/images/Hide_watsapp128.png"
+      "16": "/assets/images/whatsapp_web_config16.png",
+      "32": "/assets/images/whatsapp_web_config32.png",
+      "48": "/assets/images/whatsapp_web_config48.png",
+      "128": "/assets/images/whatsapp_web_config128.png"
     }
   },
   "host_permissions": [
@@ -27,15 +27,15 @@
         "https://web.whatsapp.com/*"
       ],
       "js": [
-        "assets/js/content-script.js"
+        "/assets/js/content-script.js"
       ]
     }
   ],
   "icons": {
-    "16": "/images/Hide_watsapp16.png",
-    "32": "/images/Hide_watsapp32.png",
-    "48": "/images/Hide_watsapp48.png",
-    "128": "/images/Hide_watsapp128.png"
+    "16": "/assets/images/whatsapp_web_config16.png",
+    "32": "/assets/images/whatsapp_web_config32.png",
+    "48": "/assets/images/whatsapp_web_config48.png",
+    "128": "/assets/images/whatsapp_web_config128.png"
   },
   "options_page": "options.html"
 }
