@@ -3,17 +3,24 @@ const sleep = time => {
 		setTimeout(resolve, time);
 	})
 }
-chrome.storage.sync.get(["extension_whatsapp_state"], async function (items) {
-	let el;
-	while (!(el = document.querySelector('[data-testid="default-user"]')))
-		await sleep(500);
+
+initStorage()
+
+chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos"], async function (items) {
+	let element;
+	while (!(element = document.querySelector('[data-testid="default-user"]')))
+		await sleep(100);
 
 	initialization()
-	if (items["extension_whatsapp_state"] == 0)
+	if (items["whatsapp_config_sidebar"] == 0)
 		showSidebar();
-	else if (items["extension_whatsapp_state"] == 1)
+	else if (items["whatsapp_config_sidebar"] == 1)
 		hideSidebar();
 
+	if (items["whatsapp_config_blur_names"] == 1)
+		BlurNames();
+	if (items["whatsapp_config_blur_photos"] == 1)
+		BlurPhotos();
 	setIconHide()
 	setIconShow()
 });
@@ -38,7 +45,7 @@ function hideSidebar() {
 	stateHide.style.display = 'none';
 	var stateHide = document.getElementById("stateShow")
 	stateHide.style.display = '';
-	chrome.storage.sync.set({ "extension_whatsapp_state": 1 })
+	chrome.storage.sync.set({ "whatsapp_config_sidebar": 1 })
 
 }
 
@@ -50,7 +57,7 @@ function showSidebar() {
 	stateHide.style.display = 'none';
 	var stateHide = document.getElementById("stateHide")
 	stateHide.style.display = '';
-	chrome.storage.sync.set({ "extension_whatsapp_state": 0 })
+	chrome.storage.sync.set({ "whatsapp_config_sidebar": 0 })
 }
 
 function setIconHide() {
@@ -58,6 +65,17 @@ function setIconHide() {
 	state.addEventListener("click", () => {
 		hideSidebar()
 	});
+}
+
+function BlurNames() {
+	let element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")
+	for (let i = 0; i < element.length; i++)
+		element[i].querySelector('[role="gridcell"]').querySelector("div").classList.toggle("blur")
+}
+function BlurPhotos() {
+	let element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")
+	for (let i = 0; i < element.length; i++)
+		element[i].querySelector('[data-testid="cell-frame-container"]').querySelector(":scope > div").querySelector(":scope > div").classList.toggle("blur-photo")
 }
 
 function setIconShow() {
@@ -110,4 +128,14 @@ function initialization() {
 		</div>
 	</div>
 	`));
+}
+
+
+function initStorage() {
+
+	chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos"], async function (items) {
+		if (items["whatsapp_config_sidebar"] === undefined) chrome.storage.sync.set({ "whatsapp_config_sidebar": 0 })
+		if (items["whatsapp_config_blur_names"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_names": 0 })
+		if (items["whatsapp_config_blur_photos"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_photos": 0 })
+	});
 }

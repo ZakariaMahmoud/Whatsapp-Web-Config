@@ -1,0 +1,11 @@
+.blur
+{
+	color: transparent !important;
+    text-shadow: 0 0 8px #b5b5b5;
+}
+
+.blur-photo
+{
+	filter: blur(5px);
+    -webkit-filter: blur(5px);
+}

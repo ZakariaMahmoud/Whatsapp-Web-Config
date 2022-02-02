@@ -1,17 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+
 body
 {
-	width: 500px;
+	width: 400px;
+	margin: 0px;
 	margin-top: 10px;
 	background-color: #333333 !important;
-	padding: 20px;
+	padding: 20px 10px 20px 10px;
 }
 
+.font-1
+{
+	font-family: 'Righteous', cursive;
+}
 .color-orange
 {
 	color: #FA9400;
 }
-
-.d-inline
+.color-grey
 {
-	display: inline;
+	color: #BDBDBD
 }
+
+.hr
+{
+	border-top: 4px solid #3A3939;
+}
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 28px;
+  }
+  
+  .switch input { 
+	opacity: 0;
+	width: 0;
+	height: 0;
+  }
+  
+  .slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #93909094;
+	-webkit-transition: .4s;
+	transition: .4s;
+  }
+  
+  .slider:before {
+	position: absolute;
+	content: "";
+	height: 20px;
+	width: 20px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: .4s;
+	transition: .4s;
+  }
+  
+  input:checked + .slider {
+	background-color: #FA9400;
+  }
+  
+  input:focus + .slider {
+	box-shadow: 0 0 1px #FA9400;
+  }
+  
+  input:checked + .slider:before {
+	-webkit-transform: translateX(26px);
+	-ms-transform: translateX(26px);
+	transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+	border-radius: 34px;
+  }
+  
+  .slider.round:before {
+	border-radius: 50%;
+  }
+  
