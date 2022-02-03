@@ -6,7 +6,7 @@ const sleep = time => {
 
 initStorage()
 
-chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos"], async function (items) {
+chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages"], async function (items) {
 	let element;
 	while (!(element = document.querySelector('[data-testid="default-user"]')))
 		await sleep(100);
@@ -21,6 +21,11 @@ chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names"
 		BlurNames();
 	if (items["whatsapp_config_blur_photos"] == 1)
 		BlurPhotos();
+	if (items["whatsapp_config_blur_recent_messages"] == 1)
+		BlurRecentMessages();
+	if (items["whatsapp_config_blur_conversation_messages"] == 1)
+		BlurConversationMessages();
+
 	setIconHide()
 	setIconShow()
 });
@@ -68,14 +73,91 @@ function setIconHide() {
 }
 
 function BlurNames() {
-	let element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")
-	for (let i = 0; i < element.length; i++)
-		element[i].querySelector('[role="gridcell"]').querySelector("div").classList.toggle("blur")
+
+	if (!document.getElementById("BlurNames")) {
+		let element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")
+		if (element.length > 0) {
+			var css_class = element[0].querySelector('[role="gridcell"] div').classList[0];
+			var style = document.createElement('style');
+			style.setAttribute("id", "BlurNames");
+			style.innerHTML = `.` + css_class + `
+			{
+				color: transparent !important;
+   				text-shadow: 0 0 8px #b5b5b5;
+			}
+		.`+ css_class + `:hover
+			{
+				color: #111b21 !important;
+    			text-shadow: 0 0 8px #b5b5b5;
+			}
+		`;
+			document.getElementsByTagName('head')[0].appendChild(style);
+		}
+	}
+	else
+		document.getElementById("BlurNames").remove()
+
+}
+
+
+function BlurConversationMessages() {
+	if (!document.getElementById("BlurConversationMessages")) {
+		var style = document.createElement('style');
+		style.setAttribute("id", "BlurConversationMessages");
+		style.innerHTML = `
+			.message-in > div{filter: blur(5px);}
+			.message-in:hover > div{filter: blur(0px);}
+			.message-out > div{filter: blur(5px);}
+			.message-out:hover > div{filter: blur(0px);}
+			`;
+		document.getElementsByTagName('head')[0].appendChild(style);
+	}
+	else
+		document.getElementById("BlurConversationMessages").remove()
+
 }
 function BlurPhotos() {
-	let element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")
-	for (let i = 0; i < element.length; i++)
-		element[i].querySelector('[data-testid="cell-frame-container"]').querySelector(":scope > div").querySelector(":scope > div").classList.toggle("blur-photo")
+
+	if (!document.getElementById("BlurPhotos")) {
+		let element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")
+		if (element.length > 0) {
+			var css_class = element[0].querySelector('[data-testid="cell-frame-container"]').querySelector(":scope > div > div").classList[0];
+			var style = document.createElement('style');
+			style.setAttribute("id", "BlurPhotos");
+			style.innerHTML = `.` + css_class + `
+			{
+				filter: blur(5px);
+				-webkit-filter: blur(5px);
+			}
+		.`+ css_class + `:hover
+			{
+				filter: blur(0px);
+				-webkit-filter: blur(0px);
+			}
+		`;
+			document.getElementsByTagName('head')[0].appendChild(style);
+		}
+	}
+	else
+		document.getElementById("BlurPhotos").remove()
+
+
+}
+
+function BlurRecentMessages() {
+	if (!document.getElementById("BlurRecentMessages")) {
+		let element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")
+		if (element.length > 0) {
+			var css_class = element[0].querySelector('[data-testid="cell-frame-container"] div:nth-child(2) > div:nth-child(2) > div').classList[0];
+			var style = document.createElement('style');
+			style.setAttribute("id", "BlurRecentMessages");
+			style.innerHTML = '.' + css_class + ' { filter: blur(4px); } ' + '.' + css_class + ':hover { filter: blur(0px); } ';
+			document.getElementsByTagName('head')[0].appendChild(style);
+		}
+	}
+	else
+		document.getElementById("BlurRecentMessages").remove()
+
 }
 
 function setIconShow() {
@@ -133,9 +215,11 @@ function initialization() {
 
 function initStorage() {
 
-	chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos"], async function (items) {
+	chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages"], async function (items) {
 		if (items["whatsapp_config_sidebar"] === undefined) chrome.storage.sync.set({ "whatsapp_config_sidebar": 0 })
 		if (items["whatsapp_config_blur_names"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_names": 0 })
 		if (items["whatsapp_config_blur_photos"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_photos": 0 })
+		if (items["whatsapp_config_blur_recent_messages"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_recent_messages": 0 })
+		if (items["whatsapp_config_blur_conversation_messages"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_conversation_messages": 0 })
 	});
 }

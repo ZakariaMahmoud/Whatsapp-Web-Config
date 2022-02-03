@@ -42,12 +42,37 @@ document.getElementById("check_blur_photos").addEventListener("change", async ()
 	});
 });
 
+document.getElementById("check_blur_conversation_messages").addEventListener("change", async () => {
+	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+	if (document.getElementById("check_blur_conversation_messages").checked)
+		chrome.storage.sync.set({ "whatsapp_config_blur_conversation_messages": 1 });
+	else
+		chrome.storage.sync.set({ "whatsapp_config_blur_conversation_messages": 0 });
+	chrome.scripting.executeScript({
+		target: { tabId: tab.id },
+		func: execute_whatsapp_config_blur_conversation_messages,
+	});
+});
+
+document.getElementById("check_blur_recent_messages").addEventListener("change", async () => {
+	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+	if (document.getElementById("check_blur_recent_messages").checked)
+		chrome.storage.sync.set({ "whatsapp_config_blur_recent_messages": 1 });
+	else
+		chrome.storage.sync.set({ "whatsapp_config_blur_recent_messages": 0 });
+	chrome.scripting.executeScript({
+		target: { tabId: tab.id },
+		func: execute_whatsapp_config_blur_recent_messages,
+	});
+});
 
 function init() {
-	chrome.storage.sync.get(["whatsapp_config_blur_names", "whatsapp_config_sidebar", "whatsapp_config_blur_photos"], function (items) {
+	chrome.storage.sync.get(["whatsapp_config_blur_names", "whatsapp_config_sidebar", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages"], function (items) {
 		checkbox(items["whatsapp_config_sidebar"], "check_hide")
 		checkbox(items["whatsapp_config_blur_names"], "check_blur_names")
 		checkbox(items["whatsapp_config_blur_photos"], "check_blur_photos")
+		checkbox(items["whatsapp_config_blur_recent_messages"], "check_blur_recent_messages")
+		checkbox(items["whatsapp_config_blur_conversation_messages"], "check_blur_conversation_messages")
 	});
 }
 
