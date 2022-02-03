@@ -18,6 +18,13 @@ async function execute_blur_names() {
 	BlurNames();
 }
 
+async function execute_dark_theme() {
+	let element;
+	while (!(element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")))
+		await sleep(100);
+	DarkTheme();
+}
+
 
 async function execute_blur_photos() {
 	let element;
@@ -26,14 +33,14 @@ async function execute_blur_photos() {
 	BlurPhotos();
 }
 
-async function execute_whatsapp_config_blur_conversation_messages() {
+async function execute_blur_conversation_messages() {
 	let element;
 	while (!(element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")))
 		await sleep(100);
 	BlurConversationMessages();
 }
 
-async function execute_whatsapp_config_blur_recent_messages() {
+async function execute_blur_recent_messages() {
 	let element;
 	while (!(element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")))
 		await sleep(100);

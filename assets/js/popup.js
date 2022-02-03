@@ -18,6 +18,18 @@ document.getElementById("check_hide").addEventListener("change", async () => {
 	});
 });
 
+document.getElementById("check_dark_theme").addEventListener("change", async () => {
+	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+	if (document.getElementById("check_dark_theme").checked)
+		chrome.storage.sync.set({ "whatsapp_config_dark_theme": 1 });
+	else
+		chrome.storage.sync.set({ "whatsapp_config_dark_theme": 0 });
+	chrome.scripting.executeScript({
+		target: { tabId: tab.id },
+		func: execute_dark_theme,
+	});
+});
+
 document.getElementById("check_blur_names").addEventListener("change", async () => {
 	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 	if (document.getElementById("check_blur_names").checked)
@@ -50,7 +62,7 @@ document.getElementById("check_blur_conversation_messages").addEventListener("ch
 		chrome.storage.sync.set({ "whatsapp_config_blur_conversation_messages": 0 });
 	chrome.scripting.executeScript({
 		target: { tabId: tab.id },
-		func: execute_whatsapp_config_blur_conversation_messages,
+		func: execute_blur_conversation_messages,
 	});
 });
 
@@ -62,17 +74,18 @@ document.getElementById("check_blur_recent_messages").addEventListener("change",
 		chrome.storage.sync.set({ "whatsapp_config_blur_recent_messages": 0 });
 	chrome.scripting.executeScript({
 		target: { tabId: tab.id },
-		func: execute_whatsapp_config_blur_recent_messages,
+		func: execute_blur_recent_messages,
 	});
 });
 
 function init() {
-	chrome.storage.sync.get(["whatsapp_config_blur_names", "whatsapp_config_sidebar", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages"], function (items) {
+	chrome.storage.sync.get(["whatsapp_config_blur_names", "whatsapp_config_sidebar", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme"], function (items) {
 		checkbox(items["whatsapp_config_sidebar"], "check_hide")
 		checkbox(items["whatsapp_config_blur_names"], "check_blur_names")
 		checkbox(items["whatsapp_config_blur_photos"], "check_blur_photos")
 		checkbox(items["whatsapp_config_blur_recent_messages"], "check_blur_recent_messages")
 		checkbox(items["whatsapp_config_blur_conversation_messages"], "check_blur_conversation_messages")
+		checkbox(items["whatsapp_config_dark_theme"], "check_dark_theme")
 	});
 }
 

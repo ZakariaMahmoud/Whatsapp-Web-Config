@@ -28,9 +28,6 @@
       ],
       "js": [
         "./assets/js/content-script.js"
-      ],
-      "css": [
-        "./assets/css/content-style.css"
       ]
     }
   ],

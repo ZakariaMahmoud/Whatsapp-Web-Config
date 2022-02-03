@@ -6,7 +6,7 @@ const sleep = time => {
 
 initStorage()
 
-chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages"], async function (items) {
+chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme"], async function (items) {
 	let element;
 	while (!(element = document.querySelector('[data-testid="default-user"]')))
 		await sleep(100);
@@ -25,6 +25,8 @@ chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names"
 		BlurRecentMessages();
 	if (items["whatsapp_config_blur_conversation_messages"] == 1)
 		BlurConversationMessages();
+	if (items["whatsapp_config_dark_theme"] == 1)
+		DarkTheme();
 
 	setIconHide()
 	setIconShow()
@@ -72,6 +74,31 @@ function setIconHide() {
 	});
 }
 
+function DarkTheme() {
+
+	if (!document.getElementById("DarkTheme")) {
+		let element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")
+		if (element) {
+			document.body.classList.add("dark")
+			var style = document.createElement('style');
+			style.setAttribute("id", "DarkTheme");
+			style.innerHTML = `[data-asset-chat-background-dark] {opacity: 0.06 !important;}`
+			document.getElementsByTagName('head')[0].appendChild(style);
+			document.getElementById("stateShow").style.fill = "#aebac1"
+			document.getElementById("stateShow").style.backgroundColor = "#232e35"
+			document.getElementById("stateHide").style.fill = "#aebac1"
+		}
+	}
+	else {
+		document.getElementById("DarkTheme").remove()
+		document.body.classList.remove("dark")
+		document.getElementById("stateShow").style.fill = "#54656f"
+		document.getElementById("stateShow").style.backgroundColor = "#f1f2f5"
+		document.getElementById("stateHide").style.fill = "#54656f"
+	}
+
+
+}
 function BlurNames() {
 
 	if (!document.getElementById("BlurNames")) {
@@ -80,16 +107,8 @@ function BlurNames() {
 			var css_class = element[0].querySelector('[role="gridcell"] div').classList[0];
 			var style = document.createElement('style');
 			style.setAttribute("id", "BlurNames");
-			style.innerHTML = `.` + css_class + `
-			{
-				color: transparent !important;
-   				text-shadow: 0 0 8px #b5b5b5;
-			}
-		.`+ css_class + `:hover
-			{
-				color: #111b21 !important;
-    			text-shadow: 0 0 8px #b5b5b5;
-			}
+			style.innerHTML = `.` + css_class + `{ filter: blur(5px); -webkit-filter: blur(5px);}
+								.`+ css_class + `:hover{filter: blur(0px); -webkit-filter: blur(0px);}
 		`;
 			document.getElementsByTagName('head')[0].appendChild(style);
 		}
@@ -168,24 +187,25 @@ function setIconShow() {
 }
 
 function initialization() {
+
 	var icon_hide = getElementByXpath('//*[@id="side"]/header/div[2]/div/span')
 	icon_hide.prepend(createElementFromHTML(`
 	<div style="margin-right: 15px;display:none" id="stateHide" >
 		<div aria-disabled="false" role="button" tabindex="0"  title="Hide Sidebar" aria-label="Hide Sidebar" >
 			<span>
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<rect x="3" y="3" width="20" height="2" rx="1" fill="#54656F"></rect>
-					<rect x="3" y="19" width="20" height="2" rx="1" fill="#54656F"></rect>
-					<rect x="14" y="7" width="9" height="2" rx="1" fill="#54656F"></rect>
-					<rect x="14" y="11" width="9" height="2" rx="1" fill="#54656F"></rect>
+				<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<rect x="3" y="3" width="20" height="2" rx="1"></rect>
+					<rect x="3" y="19" width="20" height="2" rx="1"></rect>
+					<rect x="14" y="7" width="9" height="2" rx="1"></rect>
+					<rect x="14" y="11" width="9" height="2" rx="1"></rect>
 					<rect x="3.10518" y="11.8913" width="7.78259" height="2.15949" rx="1.07975"
-						transform="rotate(-30 3.10518 11.8913)" fill="#54656F"></rect>
+						transform="rotate(-30 3.10518 11.8913)"></rect>
 					<path
 						d="M9.66079 16.028C9.07995 16.028 8.60909 15.5571 8.60909 14.9763V9.50744C8.60909 8.9266 9.07995 8.45574 9.66079 8.45574V8.45574C10.2416 8.45574 10.7125 8.9266 10.7125 9.50744V14.9763C10.7125 15.5571 10.2416 16.028 9.66079 16.028V16.028Z"
-						fill="#54656F"></path>
+						></path>
 					<rect x="4.15688" y="10.7802" width="7.90178" height="2.31374" rx="1.15687"
-						transform="rotate(30 4.15688 10.7802)" fill="#54656F"></rect>
-					<rect x="14" y="15" width="9" height="2" rx="1" fill="#54656F"></rect>
+						transform="rotate(30 4.15688 10.7802)"></rect>
+					<rect x="14" y="15" width="9" height="2" rx="1"></rect>
 				</svg>
 			</span>
 		</div>
@@ -193,33 +213,47 @@ function initialization() {
 	`));
 	var icon_show = getElementByXpath('//*[@id="app"]/div[1]/div[1]')
 	icon_show.prepend(createElementFromHTML(`
-	<div id="stateShow" style="display:none;z-index: 9999;position: fixed;margin-left: -36px;padding: 5px;background-color: #f8f8f8;border-top-left-radius: 10px;border-bottom-left-radius: 10px;">
+	<div id="stateShow" style="display:none;z-index: 9999;position: fixed;margin-left: -36px;padding: 5px;border-top-left-radius: 10px;border-bottom-left-radius: 10px;">
     	<div aria-disabled="false" role="button" tabindex="0" title="Show Sidebar" aria-label="Show Sidebar">
 			<span>
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<rect x="3" y="3" width="20" height="2" rx="1" fill="#54656F"/>
-					<rect x="3" y="19" width="20" height="2" rx="1" fill="#54656F"/>
-					<rect x="3" y="7" width="9" height="2" rx="1" fill="#54656F"/>
-					<rect x="3" y="11" width="9" height="2" rx="1" fill="#54656F"/>
-					<rect x="3" y="15" width="9" height="2" rx="1" fill="#54656F"/>
-					<rect width="7.78258" height="2.15949" rx="1.07975" transform="matrix(-0.866025 0.500001 -0.499999 -0.866026 21.8948 12.4087)" fill="#54656F"/>
-					<path d="M15.3392 8.272C15.9201 8.272 16.3909 8.74286 16.3909 9.3237L16.3909 14.7926C16.3909 15.3734 15.9201 15.8443 15.3392 15.8443V15.8443C14.7584 15.8443 14.2875 15.3734 14.2875 14.7926L14.2875 9.3237C14.2875 8.74286 14.7584 8.272 15.3392 8.272V8.272Z" fill="#54656F"/>
-					<rect width="7.90177" height="2.31374" rx="1.15687" transform="matrix(-0.866025 -0.500001 0.499999 -0.866026 20.8431 13.5198)" fill="#54656F"/>
+				<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<rect x="3" y="3" width="20" height="2" rx="1"/>
+					<rect x="3" y="19" width="20" height="2" rx="1"/>
+					<rect x="3" y="7" width="9" height="2" rx="1"/>
+					<rect x="3" y="11" width="9" height="2" rx="1"/>
+					<rect x="3" y="15" width="9" height="2" rx="1"/>
+					<rect width="7.78258" height="2.15949" rx="1.07975" transform="matrix(-0.866025 0.500001 -0.499999 -0.866026 21.8948 12.4087)"/>
+					<path d="M15.3392 8.272C15.9201 8.272 16.3909 8.74286 16.3909 9.3237L16.3909 14.7926C16.3909 15.3734 15.9201 15.8443 15.3392 15.8443V15.8443C14.7584 15.8443 14.2875 15.3734 14.2875 14.7926L14.2875 9.3237C14.2875 8.74286 14.7584 8.272 15.3392 8.272V8.272Z"/>
+					<rect width="7.90177" height="2.31374" rx="1.15687" transform="matrix(-0.866025 -0.500001 0.499999 -0.866026 20.8431 13.5198)"/>
 				</svg>
 			</span>
 		</div>
 	</div>
 	`));
+	if (document.getElementById("DarkTheme")) {
+		let element = document.getElementById('stateShow')
+		if (element) {
+			document.getElementById("stateShow").style.fill = "#aebac1"
+			document.getElementById("stateShow").style.backgroundColor = "#232e35"
+			document.getElementById("stateHide").style.fill = "#aebac1"
+		}
+	}
+	else {
+		document.getElementById("stateShow").style.fill = "#54656f"
+		document.getElementById("stateShow").style.backgroundColor = "#f1f2f5"
+		document.getElementById("stateHide").style.fill = "#54656f"
+	}
 }
 
 
 function initStorage() {
 
-	chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages"], async function (items) {
+	chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme"], async function (items) {
 		if (items["whatsapp_config_sidebar"] === undefined) chrome.storage.sync.set({ "whatsapp_config_sidebar": 0 })
 		if (items["whatsapp_config_blur_names"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_names": 0 })
 		if (items["whatsapp_config_blur_photos"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_photos": 0 })
 		if (items["whatsapp_config_blur_recent_messages"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_recent_messages": 0 })
 		if (items["whatsapp_config_blur_conversation_messages"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_conversation_messages": 0 })
+		if (items["whatsapp_config_dark_theme"] === undefined) chrome.storage.sync.set({ "whatsapp_config_dark_theme": 0 })
 	});
 }
