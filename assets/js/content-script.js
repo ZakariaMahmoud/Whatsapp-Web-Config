@@ -229,7 +229,7 @@ function initialization() {
 			</span>
 		</div>
 	</div>
-	`));
+	`));	
 	if (document.getElementById("DarkTheme")) {
 		let element = document.getElementById('stateShow')
 		if (element) {

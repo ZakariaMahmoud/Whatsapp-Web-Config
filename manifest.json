@@ -5,10 +5,12 @@
   "manifest_version": 3,
   "permissions": [
     "storage",
-    "cookies",
     "activeTab",
     "scripting"
   ],
+  "background": {
+    "service_worker": "assets/js/background.js"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

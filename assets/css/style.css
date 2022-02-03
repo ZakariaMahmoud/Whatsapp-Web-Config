@@ -86,3 +86,23 @@ body
 	border-radius: 50%;
   }
   
+
+  a:link {
+	text-decoration: none;
+	color: #FA9400;
+  }
+  
+  a:visited {
+	text-decoration: none;
+	color: #FA9400;
+  }
+  
+  a:hover {
+	text-decoration: none;
+	color: #fec36b;
+  }
+  
+  a:active {
+	text-decoration: none;
+	color: #FA9400;
+  }
