@@ -1,14 +1,29 @@
-# Hide_Whatsapp_Sidebar (Chrome extension)
+# Whatsapp Web Config 
 
-<img src="./images/readme.gif"/>
+*Add more tools and options for WhatsApp Web for more privacy and reliability.*
+### Install 
+- **Chrome Web Store:**  **[Whatsapp Web Config](https://chrome.google.com/webstore/detail/whatsapp-web-config/njpdgjdkdocjmfipagbnglmnddnfdfpk)**
+### All Features 
 
----
-## To install the extension (Hide_Whatsapp_Sidebar) on your local machine:
-- **Navigate to ```chrome://extensions``` in your browser.**
-- **Check the box next to Developer Mode.**
-- **Click Load Unpacked Extension and select the directory for your "Hide_Whatsapp_Sidebar" extension.**
----
-## Created by
+* **Hide Sidebar**
+* **Enable dark theme**
+* **Blur conversation messages**
+* **Blur contacts names**
+* **Blur contacts photos**
+* **Blur recent messages**
+
+### Youtube Video
+- [Whatsapp Web Config (Chrome extension)](https://youtu.be/E-rtPGpbKZo)
+
+### ScreenShoot
+<img src="./assets/images/1.png"/>
+<img src="./assets/images/3.png"/>
+
+<img src="./assets/images/2.png"/>
+
+
+
+### **Created by**
 
 * 🇲🇦 **Mahmoud Zakaria** 
 * 🌐 [www.mahmoud.ma](https://www.mahmoud.ma/)

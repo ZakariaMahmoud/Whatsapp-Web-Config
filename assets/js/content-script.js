@@ -159,8 +159,6 @@ function BlurPhotos() {
 	}
 	else
 		document.getElementById("BlurPhotos").remove()
-
-
 }
 
 function BlurRecentMessages() {
