@@ -6,5 +6,6 @@ chrome.runtime.onInstalled.addListener(() => {
 		if (items["whatsapp_config_blur_recent_messages"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_recent_messages": 0 })
 		if (items["whatsapp_config_blur_conversation_messages"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_conversation_messages": 0 })
 		if (items["whatsapp_config_dark_theme"] === undefined) chrome.storage.sync.set({ "whatsapp_config_dark_theme": 0 })
+		
 	});
 });
