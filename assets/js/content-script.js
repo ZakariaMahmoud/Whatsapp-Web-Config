@@ -26,7 +26,9 @@ chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names"
 	if (items["whatsapp_config_blur_conversation_messages"] == 1)
 		BlurConversationMessages();
 	if (items["whatsapp_config_dark_theme"] == 1)
-		DarkTheme();
+		EnableDarkTheme();
+	else
+		DisableDarkTheme();
 
 	setIconHide()
 	setIconShow()
@@ -74,35 +76,43 @@ function setIconHide() {
 	});
 }
 
-function DarkTheme() {
-
-	if (!document.getElementById("DarkTheme")) {
-		let element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")
-		if (element) {
-			document.body.classList.add("dark")
-			var style = document.createElement('style');
-			style.setAttribute("id", "DarkTheme");
-			style.innerHTML = `[data-asset-chat-background-dark] {opacity: 0.06 !important;}`
-			document.getElementsByTagName('head')[0].appendChild(style);
-			document.getElementById("stateShow").style.fill = "#aebac1"
-			document.getElementById("stateShow").style.backgroundColor = "#232e35"
-			document.getElementById("stateHide").style.fill = "#aebac1"
-		}
-	}
-	else {
+function EnableDarkTheme() {
+	if (document.getElementById("DarkTheme"))
 		document.getElementById("DarkTheme").remove()
+	if (!document.querySelector("body").classList.contains("dark")) {
+		document.body.classList.add("dark")
+		var style = document.createElement('style');
+		style.setAttribute("id", "DarkTheme");
+		style.innerHTML = `[data-asset-chat-background-dark] {opacity: 0.06 !important;}`
+		document.getElementsByTagName('head')[0].appendChild(style);
+		chrome.storage.sync.set({ "whatsapp_config_dark_theme": 1 })
+	}
+	document.getElementById("stateShow").style.fill = "#aebac1"
+	document.getElementById("stateShow").style.backgroundColor = "#232e35"
+	document.getElementById("stateHide").style.fill = "#aebac1"
+
+}
+function DisableDarkTheme() {
+	if (document.getElementById("DarkTheme"))
+		document.getElementById("DarkTheme").remove()
+	if (document.querySelector("body").classList.contains("dark")) {
 		document.body.classList.remove("dark")
-		document.getElementById("stateShow").style.fill = "#54656f"
-		document.getElementById("stateShow").style.backgroundColor = "#f1f2f5"
-		document.getElementById("stateHide").style.fill = "#54656f"
+		var style = document.createElement('style');
+		style.setAttribute("id", "DarkTheme");
+		style.innerHTML = `[data-asset-chat-background-dark] {opacity: 0.4 !important;}`
+		document.getElementsByTagName('head')[0].appendChild(style);
+		chrome.storage.sync.set({ "whatsapp_config_dark_theme": 0 })
 	}
 
+	document.getElementById("stateShow").style.fill = "#54656f"
+	document.getElementById("stateShow").style.backgroundColor = "#f1f2f5"
+	document.getElementById("stateHide").style.fill = "#54656f"
 
 }
 function BlurNames() {
 
 	if (!document.getElementById("BlurNames")) {
-		let element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")
+		let element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")
 		if (element.length > 0) {
 			var css_class = element[0].querySelector('[role="gridcell"] div').classList[0];
 			var style = document.createElement('style');
@@ -138,7 +148,7 @@ function BlurConversationMessages() {
 function BlurPhotos() {
 
 	if (!document.getElementById("BlurPhotos")) {
-		let element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")
+		let element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")
 		if (element.length > 0) {
 			var css_class = element[0].querySelector('[data-testid="cell-frame-container"]').querySelector(":scope > div > div").classList[0];
 			var style = document.createElement('style');
@@ -163,7 +173,7 @@ function BlurPhotos() {
 
 function BlurRecentMessages() {
 	if (!document.getElementById("BlurRecentMessages")) {
-		let element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")
+		let element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")
 		if (element.length > 0) {
 			var css_class = element[0].querySelector('[data-testid="cell-frame-container"] div:nth-child(2) > div:nth-child(2) > div').classList[0];
 			var style = document.createElement('style');
@@ -227,7 +237,7 @@ function initialization() {
 			</span>
 		</div>
 	</div>
-	`));	
+	`));
 	if (document.getElementById("DarkTheme")) {
 		let element = document.getElementById('stateShow')
 		if (element) {
@@ -245,10 +255,10 @@ function initialization() {
 
 
 function initStorage() {
-
 	chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme"], async function (items) {
 		if (items["whatsapp_config_sidebar"] === undefined) chrome.storage.sync.set({ "whatsapp_config_sidebar": 0 })
-		if (items["whatsapp_config_blur_names"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_names": 0 })
+		if (items["whatsapp_config_blur_names"] === undefined || localStorage.getItem("theme") == "light") chrome.storage.sync.set({ "whatsapp_config_blur_names": 0 })
+		else if (localStorage.getItem("theme") == "dark") chrome.storage.sync.set({ "whatsapp_config_blur_names": 1 })
 		if (items["whatsapp_config_blur_photos"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_photos": 0 })
 		if (items["whatsapp_config_blur_recent_messages"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_recent_messages": 0 })
 		if (items["whatsapp_config_blur_conversation_messages"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_conversation_messages": 0 })

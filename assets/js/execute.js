@@ -13,36 +13,39 @@ async function execute_sidebar() {
 
 async function execute_blur_names() {
 	let element;
-	while (!(element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")))
+	while (!(element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")))
 		await sleep(100);
 	BlurNames();
 }
 
 async function execute_dark_theme() {
 	let element;
-	while (!(element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")))
+	while (!(element = document.querySelector("body")))
 		await sleep(100);
-	DarkTheme();
+	if (!document.querySelector("body").classList.contains("dark"))
+		EnableDarkTheme();
+	else
+		DisableDarkTheme();
 }
 
 
 async function execute_blur_photos() {
 	let element;
-	while (!(element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")))
+	while (!(element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")))
 		await sleep(100);
 	BlurPhotos();
 }
 
 async function execute_blur_conversation_messages() {
 	let element;
-	while (!(element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")))
+	while (!(element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")))
 		await sleep(100);
 	BlurConversationMessages();
 }
 
 async function execute_blur_recent_messages() {
 	let element;
-	while (!(element = document.querySelector('[aria-label="Chat list"]').querySelectorAll(":scope > div")))
+	while (!(element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")))
 		await sleep(100);
 	BlurRecentMessages();
 }
