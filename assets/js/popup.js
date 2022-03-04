@@ -6,6 +6,35 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tab) {
 });
 init()
 
+const sleep = time => {
+	return new Promise(resolve => {
+		setTimeout(resolve, time);
+	})
+}
+// Slider
+var slider = document.getElementById("opacity");
+var count = 0;
+slider.oninput = async function () {
+	if (count >= 30) {
+		document.getElementById("opacity").hidden = true
+		document.getElementById("message").innerHTML =
+			`<div class="col-12 d-flex align-items-center justify-content-center">
+				<span class="h5 color-grey">Are you happy now ?</span>
+		</div>
+		`
+	}
+	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+	await sleep(100);
+	chrome.storage.sync.set({ "whatsapp_config_opacity": this.value });
+	chrome.scripting.executeScript({
+		target: { tabId: tab.id },
+		func: execute_opacity,
+	});
+	count++;
+}
+
+
+
 document.getElementById("check_hide").addEventListener("change", async () => {
 	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 	if (document.getElementById("check_hide").checked)
@@ -79,13 +108,14 @@ document.getElementById("check_blur_recent_messages").addEventListener("change",
 });
 
 function init() {
-	chrome.storage.sync.get(["whatsapp_config_blur_names", "whatsapp_config_sidebar", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme"], function (items) {
+	chrome.storage.sync.get(["whatsapp_config_blur_names", "whatsapp_config_sidebar", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme", "whatsapp_config_opacity"], function (items) {
 		checkbox(items["whatsapp_config_sidebar"], "check_hide")
 		checkbox(items["whatsapp_config_blur_names"], "check_blur_names")
 		checkbox(items["whatsapp_config_blur_photos"], "check_blur_photos")
 		checkbox(items["whatsapp_config_blur_recent_messages"], "check_blur_recent_messages")
 		checkbox(items["whatsapp_config_blur_conversation_messages"], "check_blur_conversation_messages")
 		checkbox(items["whatsapp_config_dark_theme"], "check_dark_theme")
+		if (items["whatsapp_config_opacity"] != undefined) slider.value = items["whatsapp_config_opacity"]
 	});
 }
 

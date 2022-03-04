@@ -18,6 +18,11 @@ async function execute_blur_names() {
 	BlurNames();
 }
 
+async function execute_opacity() {
+	await sleep(100);
+	Opacity();
+}
+
 async function execute_dark_theme() {
 	let element;
 	while (!(element = document.querySelector("body")))

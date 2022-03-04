@@ -1,3 +1,6 @@
+// Global Variable
+var blur_opacity = 5;
+
 const sleep = time => {
 	return new Promise(resolve => {
 		setTimeout(resolve, time);
@@ -6,7 +9,7 @@ const sleep = time => {
 
 initStorage()
 
-chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme"], async function (items) {
+chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme", "whatsapp_config_opacity"], async function (items) {
 	let element;
 	while (!(element = document.querySelector('[data-testid="default-user"]')))
 		await sleep(100);
@@ -32,12 +35,29 @@ chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names"
 
 	setIconHide()
 	setIconShow()
+	Opacity()
 });
 
 function getElementByXpath(path) {
 	element = document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
 	if (element && element.outerHTML.search("menu") > -1)
 		return (document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue);
+}
+
+
+function Opacity() {
+	chrome.storage.sync.get(["whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_opacity"], async function (items) {
+
+		blur_opacity = items["whatsapp_config_opacity"];
+		if (items["whatsapp_config_blur_names"] == 1)
+			BlurNames(true);
+		if (items["whatsapp_config_blur_photos"] == 1)
+			BlurPhotos(true);
+		if (items["whatsapp_config_blur_recent_messages"] == 1)
+			BlurRecentMessages(true);
+		if (items["whatsapp_config_blur_conversation_messages"] == 1)
+			BlurConversationMessages(true);
+	});
 }
 
 function createElementFromHTML(htmlString) {
@@ -109,16 +129,19 @@ function DisableDarkTheme() {
 	document.getElementById("stateHide").style.fill = "#54656f"
 
 }
-function BlurNames() {
+function BlurNames(opacity = false) {
 
-	if (!document.getElementById("BlurNames")) {
+	if (!document.getElementById("BlurNames") || opacity) {
+		if (opacity) document.getElementById("BlurNames").remove()
 		let element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")
 		if (element.length > 0) {
 			var css_class = element[0].querySelector('[role="gridcell"] div').classList[0];
+			var header = "#main > header > div:nth-child(2) > div > div"
 			var style = document.createElement('style');
 			style.setAttribute("id", "BlurNames");
-			style.innerHTML = `.` + css_class + `{ filter: blur(5px); -webkit-filter: blur(5px);}
-								.`+ css_class + `:hover{filter: blur(0px); -webkit-filter: blur(0px);}
+			style.innerHTML = `.${css_class}, ${header}{ filter: blur(${blur_opacity}px); -webkit-filter: blur(${blur_opacity}px);}
+								.${css_class}:hover{filter: blur(0px); -webkit-filter: blur(0px);}
+								${header}:hover{filter: blur(0px); -webkit-filter: blur(0px);}
 		`;
 			document.getElementsByTagName('head')[0].appendChild(style);
 		}
@@ -129,14 +152,16 @@ function BlurNames() {
 }
 
 
-function BlurConversationMessages() {
-	if (!document.getElementById("BlurConversationMessages")) {
+function BlurConversationMessages(opacity = false) {
+	if (!document.getElementById("BlurConversationMessages") || opacity) {
+		if (opacity) document.getElementById("BlurConversationMessages").remove()
+
 		var style = document.createElement('style');
 		style.setAttribute("id", "BlurConversationMessages");
 		style.innerHTML = `
-			.message-in > div{filter: blur(5px);}
+			.message-in > div{filter: blur(${blur_opacity}px);}
 			.message-in:hover > div{filter: blur(0px);}
-			.message-out > div{filter: blur(5px);}
+			.message-out > div{filter: blur(${blur_opacity}px);}
 			.message-out:hover > div{filter: blur(0px);}
 			`;
 		document.getElementsByTagName('head')[0].appendChild(style);
@@ -145,25 +170,34 @@ function BlurConversationMessages() {
 		document.getElementById("BlurConversationMessages").remove()
 
 }
-function BlurPhotos() {
+function BlurPhotos(opacity = false) {
 
-	if (!document.getElementById("BlurPhotos")) {
+	if (!document.getElementById("BlurPhotos") || opacity) {
+		if (opacity) document.getElementById("BlurPhotos").remove()
+
 		let element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")
 		if (element.length > 0) {
 			var css_class = element[0].querySelector('[data-testid="cell-frame-container"]').querySelector(":scope > div > div").classList[0];
+			var header = '[title="Profile Details"]';
 			var style = document.createElement('style');
 			style.setAttribute("id", "BlurPhotos");
-			style.innerHTML = `.` + css_class + `
+			style.innerHTML =
+				`.${css_class}, ${header}
 			{
-				filter: blur(5px);
-				-webkit-filter: blur(5px);
+				filter: blur(${blur_opacity}px);
+				-webkit-filter: blur(${blur_opacity}px);
 			}
-		.`+ css_class + `:hover
+			.${css_class}:hover
 			{
 				filter: blur(0px);
 				-webkit-filter: blur(0px);
 			}
-		`;
+			${header}:hover
+			{
+				filter: blur(0px);
+				-webkit-filter: blur(0px);
+			}
+			`;
 			document.getElementsByTagName('head')[0].appendChild(style);
 		}
 	}
@@ -171,14 +205,15 @@ function BlurPhotos() {
 		document.getElementById("BlurPhotos").remove()
 }
 
-function BlurRecentMessages() {
-	if (!document.getElementById("BlurRecentMessages")) {
+function BlurRecentMessages(opacity = false) {
+	if (!document.getElementById("BlurRecentMessages") || opacity) {
+		if (opacity) document.getElementById("BlurRecentMessages").remove()
 		let element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")
 		if (element.length > 0) {
 			var css_class = element[0].querySelector('[data-testid="cell-frame-container"] div:nth-child(2) > div:nth-child(2) > div').classList[0];
 			var style = document.createElement('style');
 			style.setAttribute("id", "BlurRecentMessages");
-			style.innerHTML = '.' + css_class + ' { filter: blur(4px); } ' + '.' + css_class + ':hover { filter: blur(0px); } ';
+			style.innerHTML = `.${css_class}  { filter: blur(${blur_opacity}px); } .${css_class}:hover { filter: blur(0px); } `;
 			document.getElementsByTagName('head')[0].appendChild(style);
 		}
 	}
@@ -255,7 +290,7 @@ function initialization() {
 
 
 function initStorage() {
-	chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme"], async function (items) {
+	chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme", "whatsapp_config_opacity"], async function (items) {
 		if (items["whatsapp_config_sidebar"] === undefined) chrome.storage.sync.set({ "whatsapp_config_sidebar": 0 })
 		if (items["whatsapp_config_blur_names"] === undefined || localStorage.getItem("theme") == "light") chrome.storage.sync.set({ "whatsapp_config_blur_names": 0 })
 		else if (localStorage.getItem("theme") == "dark") chrome.storage.sync.set({ "whatsapp_config_blur_names": 1 })
@@ -263,5 +298,6 @@ function initStorage() {
 		if (items["whatsapp_config_blur_recent_messages"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_recent_messages": 0 })
 		if (items["whatsapp_config_blur_conversation_messages"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_conversation_messages": 0 })
 		if (items["whatsapp_config_dark_theme"] === undefined) chrome.storage.sync.set({ "whatsapp_config_dark_theme": 0 })
+		if (items["whatsapp_config_opacity"] === undefined) chrome.storage.sync.set({ "whatsapp_config_opacity": 5 })
 	});
 }
