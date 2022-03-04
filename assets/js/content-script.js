@@ -9,7 +9,7 @@ const sleep = time => {
 
 initStorage()
 
-chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme", "whatsapp_config_opacity"], async function (items) {
+chrome.storage.local.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme", "whatsapp_config_opacity"], async function (items) {
 	let element;
 	while (!(element = document.querySelector('[data-testid="default-user"]')))
 		await sleep(100);
@@ -46,7 +46,7 @@ function getElementByXpath(path) {
 
 
 function Opacity() {
-	chrome.storage.sync.get(["whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_opacity"], async function (items) {
+	chrome.storage.local.get(["whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_opacity"], async function (items) {
 
 		blur_opacity = items["whatsapp_config_opacity"];
 		if (items["whatsapp_config_blur_names"] == 1)
@@ -74,7 +74,7 @@ function hideSidebar() {
 	stateHide.style.display = 'none';
 	var stateHide = document.getElementById("stateShow")
 	stateHide.style.display = '';
-	chrome.storage.sync.set({ "whatsapp_config_sidebar": 1 })
+	chrome.storage.local.set({ "whatsapp_config_sidebar": 1 })
 
 }
 
@@ -86,7 +86,7 @@ function showSidebar() {
 	stateHide.style.display = 'none';
 	var stateHide = document.getElementById("stateHide")
 	stateHide.style.display = '';
-	chrome.storage.sync.set({ "whatsapp_config_sidebar": 0 })
+	chrome.storage.local.set({ "whatsapp_config_sidebar": 0 })
 }
 
 function setIconHide() {
@@ -105,7 +105,7 @@ function EnableDarkTheme() {
 		style.setAttribute("id", "DarkTheme");
 		style.innerHTML = `[data-asset-chat-background-dark] {opacity: 0.06 !important;}`
 		document.getElementsByTagName('head')[0].appendChild(style);
-		chrome.storage.sync.set({ "whatsapp_config_dark_theme": 1 })
+		chrome.storage.local.set({ "whatsapp_config_dark_theme": 1 })
 	}
 	document.getElementById("stateShow").style.fill = "#aebac1"
 	document.getElementById("stateShow").style.backgroundColor = "#232e35"
@@ -121,7 +121,7 @@ function DisableDarkTheme() {
 		style.setAttribute("id", "DarkTheme");
 		style.innerHTML = `[data-asset-chat-background-dark] {opacity: 0.4 !important;}`
 		document.getElementsByTagName('head')[0].appendChild(style);
-		chrome.storage.sync.set({ "whatsapp_config_dark_theme": 0 })
+		chrome.storage.local.set({ "whatsapp_config_dark_theme": 0 })
 	}
 
 	document.getElementById("stateShow").style.fill = "#54656f"
@@ -290,14 +290,14 @@ function initialization() {
 
 
 function initStorage() {
-	chrome.storage.sync.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme", "whatsapp_config_opacity"], async function (items) {
-		if (items["whatsapp_config_sidebar"] === undefined) chrome.storage.sync.set({ "whatsapp_config_sidebar": 0 })
-		if (items["whatsapp_config_blur_names"] === undefined || localStorage.getItem("theme") == "light") chrome.storage.sync.set({ "whatsapp_config_blur_names": 0 })
-		else if (localStorage.getItem("theme") == "dark") chrome.storage.sync.set({ "whatsapp_config_blur_names": 1 })
-		if (items["whatsapp_config_blur_photos"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_photos": 0 })
-		if (items["whatsapp_config_blur_recent_messages"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_recent_messages": 0 })
-		if (items["whatsapp_config_blur_conversation_messages"] === undefined) chrome.storage.sync.set({ "whatsapp_config_blur_conversation_messages": 0 })
-		if (items["whatsapp_config_dark_theme"] === undefined) chrome.storage.sync.set({ "whatsapp_config_dark_theme": 0 })
-		if (items["whatsapp_config_opacity"] === undefined) chrome.storage.sync.set({ "whatsapp_config_opacity": 5 })
+	chrome.storage.local.get(["whatsapp_config_sidebar", "whatsapp_config_blur_names", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme", "whatsapp_config_opacity"], async function (items) {
+		if (items["whatsapp_config_sidebar"] === undefined) chrome.storage.local.set({ "whatsapp_config_sidebar": 0 })
+		if (items["whatsapp_config_blur_names"] === undefined || localStorage.getItem("theme") == "light") chrome.storage.local.set({ "whatsapp_config_blur_names": 0 })
+		else if (localStorage.getItem("theme") == "dark") chrome.storage.local.set({ "whatsapp_config_blur_names": 1 })
+		if (items["whatsapp_config_blur_photos"] === undefined) chrome.storage.local.set({ "whatsapp_config_blur_photos": 0 })
+		if (items["whatsapp_config_blur_recent_messages"] === undefined) chrome.storage.local.set({ "whatsapp_config_blur_recent_messages": 0 })
+		if (items["whatsapp_config_blur_conversation_messages"] === undefined) chrome.storage.local.set({ "whatsapp_config_blur_conversation_messages": 0 })
+		if (items["whatsapp_config_dark_theme"] === undefined) chrome.storage.local.set({ "whatsapp_config_dark_theme": 0 })
+		if (items["whatsapp_config_opacity"] === undefined) chrome.storage.local.set({ "whatsapp_config_opacity": 5 })
 	});
 }
