@@ -21,7 +21,7 @@ slider.oninput = async function () {
 		target: { tabId: tab.id },
 		func: execute_opacity,
 	});
-	count++;
+
 }
 
 
