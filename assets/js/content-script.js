@@ -178,7 +178,7 @@ function BlurPhotos(opacity = false) {
 		let element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")
 		if (element.length > 0) {
 			var css_class = element[0].querySelector('[data-testid="cell-frame-container"]').querySelector(":scope > div > div").classList[0];
-			var header = '[title="Profile Details"]';
+			var header = "#main > header > div > div";
 			var style = document.createElement('style');
 			style.setAttribute("id", "BlurPhotos");
 			style.innerHTML =

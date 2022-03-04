@@ -11,6 +11,7 @@
 * **Blur contacts names**
 * **Blur contacts photos**
 * **Blur recent messages**
+* **Blur range**
 
 ### Youtube Video
 - [Whatsapp Web Config (Chrome extension)](https://youtu.be/E-rtPGpbKZo)
