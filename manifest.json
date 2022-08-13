@@ -1,13 +1,9 @@
 {
   "name": "Whatsapp Web Config",
   "description": "Add more tools and options for WhatsApp Web for more privacy and reliability.",
-  "version": "1.0",
+  "version": "1.1",
   "manifest_version": 3,
-  "permissions": [
-    "storage",
-    "activeTab",
-    "scripting"
-  ],
+  "permissions": ["storage", "activeTab", "scripting"],
   "background": {
     "service_worker": "assets/js/background.js"
   },
@@ -20,17 +16,11 @@
       "128": "/assets/images/whatsapp_web_config128.png"
     }
   },
-  "host_permissions": [
-    "https://web.whatsapp.com/"
-  ],
+  "host_permissions": ["https://web.whatsapp.com/"],
   "content_scripts": [
     {
-      "matches": [
-        "https://web.whatsapp.com/*"
-      ],
-      "js": [
-        "./assets/js/content-script.js"
-      ]
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["./assets/js/content-script.js"]
     }
   ],
   "icons": {
