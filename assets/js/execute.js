@@ -19,7 +19,7 @@ async function execute_sidebar() {
  * Execute blur names functionality
  */
 async function execute_blur_names() {
-	const element = await safeQuerySelector("#pane-side > div > div > div");
+	const element = await safeQuerySelector(SELECTORS.PANE_SIDE_CONTACTS);
 	if (element) {
 		const childElements = element.querySelectorAll(":scope > div");
 		if (childElements.length > 0) {
@@ -40,7 +40,7 @@ async function execute_opacity() {
  * Execute dark theme toggle functionality
  */
 async function execute_dark_theme() {
-	const bodyElement = await safeQuerySelector("body");
+	const bodyElement = await safeQuerySelector(SELECTORS.BODY);
 	if (bodyElement) {
 		const isDarkThemeEnabled = bodyElement.classList.contains("dark");
 		if (!isDarkThemeEnabled) {
@@ -55,7 +55,7 @@ async function execute_dark_theme() {
  * Execute blur photos functionality
  */
 async function execute_blur_photos() {
-	const element = await safeQuerySelector("#pane-side > div > div > div");
+	const element = await safeQuerySelector(SELECTORS.PANE_SIDE_CONTACTS);
 	if (element) {
 		const childElements = element.querySelectorAll(":scope > div");
 		if (childElements.length > 0) {
@@ -68,7 +68,7 @@ async function execute_blur_photos() {
  * Execute blur conversation messages functionality
  */
 async function execute_blur_conversation_messages() {
-	const element = await safeQuerySelector("#pane-side > div > div > div");
+	const element = await safeQuerySelector(SELECTORS.PANE_SIDE_CONTACTS);
 	if (element) {
 		const childElements = element.querySelectorAll(":scope > div");
 		if (childElements.length > 0) {
@@ -81,7 +81,7 @@ async function execute_blur_conversation_messages() {
  * Execute blur recent messages functionality
  */
 async function execute_blur_recent_messages() {
-	const element = await safeQuerySelector("#pane-side > div > div > div");
+	const element = await safeQuerySelector(SELECTORS.PANE_SIDE_CONTACTS);
 	if (element) {
 		const childElements = element.querySelectorAll(":scope > div");
 		if (childElements.length > 0) {

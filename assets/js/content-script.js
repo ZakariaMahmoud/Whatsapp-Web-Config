@@ -6,7 +6,7 @@ initStorage();
 chrome.storage.local.get(
   Object.values(CONFIG_KEYS),
   async function (items) {
-    const defaultUserElement = await safeQuerySelector('[data-testid="default-user"]');
+    const defaultUserElement = await safeQuerySelector(SELECTORS.DEFAULT_USER);
     if (!defaultUserElement) {
       console.warn('Default user element not found, initialization may fail');
       return;
