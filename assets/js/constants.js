@@ -20,25 +20,23 @@ const DEFAULT_VALUES = {
   [CONFIG_KEYS.OPACITY]: 5
 };
 
-/**
- * Initialize default configuration values on extension install
- */
-chrome.runtime.onInstalled.addListener(() => {
-	const configKeys = Object.values(CONFIG_KEYS);
-	
-	chrome.storage.local.get(configKeys, function (items) {
-		// Set default values for any undefined configuration keys
-		const updates = {};
-		
-		Object.entries(DEFAULT_VALUES).forEach(([key, defaultValue]) => {
-			if (items[key] === undefined) {
-				updates[key] = defaultValue;
-			}
-		});
-		
-		// Apply updates if any
-		if (Object.keys(updates).length > 0) {
-			chrome.storage.local.set(updates);
-		}
-	});
-});
+// Element IDs
+const ELEMENT_IDS = {
+  CHECK_HIDE: 'check_hide',
+  CHECK_DARK_THEME: 'check_dark_theme',
+  CHECK_BLUR_NAMES: 'check_blur_names',
+  CHECK_BLUR_PHOTOS: 'check_blur_photos',
+  CHECK_BLUR_CONVERSATION_MESSAGES: 'check_blur_conversation_messages',
+  CHECK_BLUR_RECENT_MESSAGES: 'check_blur_recent_messages',
+  OPACITY_SLIDER: 'opacity'
+};
+
+// Blur opacity value
+const BLUR_OPACITY = 5;
+
+// Sleep delay values
+const SLEEP_DELAYS = {
+  SHORT: 100,
+  MEDIUM: 500,
+  LONG: 1000
+};
