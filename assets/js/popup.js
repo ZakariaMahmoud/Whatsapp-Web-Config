@@ -1,118 +1,79 @@
+// Check if current tab is WhatsApp Web, if not open it
 chrome.tabs.query({ active: true, currentWindow: true }, function (tab) {
-	var url = tab[0].url;
-	if (url.search("web.whatsapp.com") == -1) {
+	const url = tab[0]?.url;
+	if (url && !url.includes("web.whatsapp.com")) {
 		window.open('https://web.whatsapp.com/', '_blank');
 	}
 });
-init()
 
-const sleep = time => {
-	return new Promise(resolve => {
-		setTimeout(resolve, time);
-	})
+// Initialize the popup
+init();
+// Configuration object for checkboxes
+const CHECKBOX_CONFIG = {
+	[ELEMENT_IDS.CHECK_HIDE]: {
+		configKey: CONFIG_KEYS.SIDEBAR,
+		executeFunc: execute_sidebar
+	},
+	[ELEMENT_IDS.CHECK_DARK_THEME]: {
+		configKey: CONFIG_KEYS.DARK_THEME,
+		executeFunc: execute_dark_theme
+	},
+	[ELEMENT_IDS.CHECK_BLUR_NAMES]: {
+		configKey: CONFIG_KEYS.BLUR_NAMES,
+		executeFunc: execute_blur_names
+	},
+	[ELEMENT_IDS.CHECK_BLUR_PHOTOS]: {
+		configKey: CONFIG_KEYS.BLUR_PHOTOS,
+		executeFunc: execute_blur_photos
+	},
+	[ELEMENT_IDS.CHECK_BLUR_CONVERSATION_MESSAGES]: {
+		configKey: CONFIG_KEYS.BLUR_CONVERSATION_MESSAGES,
+		executeFunc: execute_blur_conversation_messages
+	},
+	[ELEMENT_IDS.CHECK_BLUR_RECENT_MESSAGES]: {
+		configKey: CONFIG_KEYS.BLUR_RECENT_MESSAGES,
+		executeFunc: execute_blur_recent_messages
+	}
+};
+
+// Setup event listeners for all checkboxes
+Object.entries(CHECKBOX_CONFIG).forEach(([elementId, config]) => {
+	const element = document.getElementById(elementId);
+	if (element) {
+		element.addEventListener("change", async (event) => {
+			await handleCheckboxChange(event, config.configKey, config.executeFunc);
+		});
+	}
+});
+
+// Opacity slider
+const slider = document.getElementById(ELEMENT_IDS.OPACITY_SLIDER);
+
+if (slider) {
+	slider.oninput = async function () {
+		setConfigValue(CONFIG_KEYS.OPACITY, this.value);
+		await executeInCurrentTab(execute_opacity);
+	};
 }
-// Slider
-var slider = document.getElementById("opacity");
-
-slider.oninput = async function () {
-	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-	chrome.storage.local.set({ "whatsapp_config_opacity": this.value });
-	chrome.scripting.executeScript({
-		target: { tabId: tab.id },
-		func: execute_opacity,
-	});
-
-}
 
 
-
-document.getElementById("check_hide").addEventListener("change", async () => {
-	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-	if (document.getElementById("check_hide").checked)
-		chrome.storage.local.set({ "whatsapp_config_sidebar": 1 });
-	else
-		chrome.storage.local.set({ "whatsapp_config_sidebar": 0 });
-	chrome.scripting.executeScript({
-		target: { tabId: tab.id },
-		func: execute_sidebar,
-	});
-});
-
-document.getElementById("check_dark_theme").addEventListener("change", async () => {
-	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-	if (document.getElementById("check_dark_theme").checked)
-		chrome.storage.local.set({ "whatsapp_config_dark_theme": 1 });
-	else
-		chrome.storage.local.set({ "whatsapp_config_dark_theme": 0 });
-	chrome.scripting.executeScript({
-		target: { tabId: tab.id },
-		func: execute_dark_theme,
-	});
-});
-
-document.getElementById("check_blur_names").addEventListener("change", async () => {
-	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-	if (document.getElementById("check_blur_names").checked)
-		chrome.storage.local.set({ "whatsapp_config_blur_names": 1 });
-	else
-		chrome.storage.local.set({ "whatsapp_config_blur_names": 0 });
-	chrome.scripting.executeScript({
-		target: { tabId: tab.id },
-		func: execute_blur_names,
-	});
-});
-
-document.getElementById("check_blur_photos").addEventListener("change", async () => {
-	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-	if (document.getElementById("check_blur_photos").checked)
-		chrome.storage.local.set({ "whatsapp_config_blur_photos": 1 });
-	else
-		chrome.storage.local.set({ "whatsapp_config_blur_photos": 0 });
-	chrome.scripting.executeScript({
-		target: { tabId: tab.id },
-		func: execute_blur_photos,
-	});
-});
-
-document.getElementById("check_blur_conversation_messages").addEventListener("change", async () => {
-	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-	if (document.getElementById("check_blur_conversation_messages").checked)
-		chrome.storage.local.set({ "whatsapp_config_blur_conversation_messages": 1 });
-	else
-		chrome.storage.local.set({ "whatsapp_config_blur_conversation_messages": 0 });
-	chrome.scripting.executeScript({
-		target: { tabId: tab.id },
-		func: execute_blur_conversation_messages,
-	});
-});
-
-document.getElementById("check_blur_recent_messages").addEventListener("change", async () => {
-	let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-	if (document.getElementById("check_blur_recent_messages").checked)
-		chrome.storage.local.set({ "whatsapp_config_blur_recent_messages": 1 });
-	else
-		chrome.storage.local.set({ "whatsapp_config_blur_recent_messages": 0 });
-	chrome.scripting.executeScript({
-		target: { tabId: tab.id },
-		func: execute_blur_recent_messages,
-	});
-});
-
+/**
+ * Initialize the popup by loading stored configuration values
+ */
 function init() {
-	chrome.storage.local.get(["whatsapp_config_blur_names", "whatsapp_config_sidebar", "whatsapp_config_blur_photos", "whatsapp_config_blur_recent_messages", "whatsapp_config_blur_conversation_messages", "whatsapp_config_dark_theme", "whatsapp_config_opacity"], function (items) {
-		checkbox(items["whatsapp_config_sidebar"], "check_hide")
-		checkbox(items["whatsapp_config_blur_names"], "check_blur_names")
-		checkbox(items["whatsapp_config_blur_photos"], "check_blur_photos")
-		checkbox(items["whatsapp_config_blur_recent_messages"], "check_blur_recent_messages")
-		checkbox(items["whatsapp_config_blur_conversation_messages"], "check_blur_conversation_messages")
-		checkbox(items["whatsapp_config_dark_theme"], "check_dark_theme")
-		if (items["whatsapp_config_opacity"] != undefined) slider.value = items["whatsapp_config_opacity"]
+	const configKeys = Object.values(CONFIG_KEYS);
+	
+	chrome.storage.local.get(configKeys, function (items) {
+		// Set checkbox states based on stored values
+		Object.entries(CHECKBOX_CONFIG).forEach(([elementId, config]) => {
+			const value = items[config.configKey];
+			setCheckboxState(value, elementId);
+		});
+		
+		// Set opacity slider value
+		const opacityValue = items[CONFIG_KEYS.OPACITY];
+		if (opacityValue !== undefined && slider) {
+			slider.value = opacityValue;
+		}
 	});
-}
-
-function checkbox(item, element) {
-	if (item == 1)
-		document.getElementById(element).checked = true
-	else if (item == 0)
-		document.getElementById(element).checked = false
 }

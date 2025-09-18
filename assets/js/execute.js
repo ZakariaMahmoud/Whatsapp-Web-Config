@@ -1,57 +1,92 @@
+/**
+ * Execute sidebar toggle functionality
+ */
 async function execute_sidebar() {
-	let element;
-	while (!(element = document.getElementById('side')))
-		await sleep(100);
-	element = element.parentElement
-	if (location.hostname == "web.whatsapp.com") {
-		if (element.style.display != 'none')
-			hideSidebar();
-		else
-			showSidebar();
+	const element = await safeGetElementById('side');
+	if (element && element.parentElement) {
+		const parentElement = element.parentElement;
+		if (location.hostname === "web.whatsapp.com") {
+			if (parentElement.style.display !== 'none') {
+				hideSidebar();
+			} else {
+				showSidebar();
+			}
+		}
 	}
 }
 
+/**
+ * Execute blur names functionality
+ */
 async function execute_blur_names() {
-	let element;
-	while (!(element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")))
-		await sleep(100);
-	BlurNames();
+	const element = await safeQuerySelector(SELECTORS.PANE_SIDE_CONTACTS);
+	if (element) {
+		const childElements = element.querySelectorAll(":scope > div");
+		if (childElements.length > 0) {
+			BlurNames();
+		}
+	}
 }
 
+/**
+ * Execute opacity change functionality
+ */
 async function execute_opacity() {
-	await sleep(100);
+	await sleep(SLEEP_DELAYS.SHORT);
 	Opacity();
 }
 
+/**
+ * Execute dark theme toggle functionality
+ */
 async function execute_dark_theme() {
-	let element;
-	while (!(element = document.querySelector("body")))
-		await sleep(100);
-	if (!document.querySelector("body").classList.contains("dark"))
-		EnableDarkTheme();
-	else
-		DisableDarkTheme();
+	const bodyElement = await safeQuerySelector(SELECTORS.BODY);
+	if (bodyElement) {
+		const isDarkThemeEnabled = bodyElement.classList.contains("dark");
+		if (!isDarkThemeEnabled) {
+			EnableDarkTheme();
+		} else {
+			DisableDarkTheme();
+		}
+	}
 }
 
-
+/**
+ * Execute blur photos functionality
+ */
 async function execute_blur_photos() {
-	let element;
-	while (!(element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")))
-		await sleep(100);
-	BlurPhotos();
+	const element = await safeQuerySelector(SELECTORS.PANE_SIDE_CONTACTS);
+	if (element) {
+		const childElements = element.querySelectorAll(":scope > div");
+		if (childElements.length > 0) {
+			BlurPhotos();
+		}
+	}
 }
 
+/**
+ * Execute blur conversation messages functionality
+ */
 async function execute_blur_conversation_messages() {
-	let element;
-	while (!(element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")))
-		await sleep(100);
-	BlurConversationMessages();
+	const element = await safeQuerySelector(SELECTORS.PANE_SIDE_CONTACTS);
+	if (element) {
+		const childElements = element.querySelectorAll(":scope > div");
+		if (childElements.length > 0) {
+			BlurConversationMessages();
+		}
+	}
 }
 
+/**
+ * Execute blur recent messages functionality
+ */
 async function execute_blur_recent_messages() {
-	let element;
-	while (!(element = document.querySelector("#pane-side > div > div > div").querySelectorAll(":scope > div")))
-		await sleep(100);
-	BlurRecentMessages();
+	const element = await safeQuerySelector(SELECTORS.PANE_SIDE_CONTACTS);
+	if (element) {
+		const childElements = element.querySelectorAll(":scope > div");
+		if (childElements.length > 0) {
+			BlurRecentMessages();
+		}
+	}
 }
 

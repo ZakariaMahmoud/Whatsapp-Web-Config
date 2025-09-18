@@ -20,7 +20,11 @@
   "content_scripts": [
     {
       "matches": ["https://web.whatsapp.com/*"],
-      "js": ["./assets/js/content-script.js"]
+      "js": [
+        "./assets/js/constants.js",
+        "./assets/js/utils.js",
+        "./assets/js/content-script.js"
+      ]
     }
   ],
   "icons": {
